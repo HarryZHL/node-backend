@@ -1,0 +1,22 @@
+{
+  "name": "rrweb-backend",
+  "version": "1.0.0",
+  "description": "用于存储rr-web的events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11"
+  }
+}
