@@ -2,6 +2,40 @@ const Router = require('koa-router')
 const fs = require('fs')
 const path = require('path')
 const router = new Router()
+router.get('/getEvents', async ctx => {
+  try {
+    const body = {
+      status: 200,
+      success: true,
+      data: null,
+      msg: 'success'
+    }
+    const { file } = ctx.query
+    if (!file) {
+      ctx.status = 500
+      ctx.body = {
+        status: 500,
+        success: false,
+        data: null,
+        msg: `缺少指定file`
+      }
+      return
+    }
+    const recordFolder = path.join(__dirname, '../../record')
+    const data = fs.readFileSync(path.join(recordFolder, file))
+    body.data = JSON.parse(data.toString())
+    ctx.status = 200
+    ctx.body = body
+  } catch (error) {
+    ctx.status = 500
+    ctx.body = {
+      status: 500,
+      success: false,
+      data: null,
+      msg: error
+    }
+  }
+})
 router.post('/saveEvents', async ctx => {
   try {
     const body = {
@@ -10,7 +44,7 @@ router.post('/saveEvents', async ctx => {
       data: null,
       msg: 'success'
     }
-    const recordFolder = path.join(__dirname, '../record')
+    const recordFolder = path.join(__dirname, '../../record')
     const { file, event } = ctx.request.body
     if (!file) {
       ctx.status = 500
@@ -49,8 +83,8 @@ router.post('/saveEvents', async ctx => {
     ctx.body = {
       status: 500,
       success: false,
-      data: error,
-      msg: `error`
+      data: null,
+      msg: error
     }
   }
 })

@@ -1,9 +1,13 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const moment = require('moment')
+const path = require('path')
+const static = require('koa-static')
 const app = new Koa()
 const router = require('./src/router')
 const PORT = 3030
+
+app.use(static(path.join(__dirname, './record')))
 
 app.use(async (ctx, next) => {
   const start = Date.now();
@@ -28,6 +32,7 @@ app.use(async (ctx, next) => {
   
   if (ctx.method === 'OPTIONS') {
     ctx.body = '';
+    ctx.status = 204;
   }
 
   console.log('------------------------------------------');
@@ -42,5 +47,5 @@ app.use(async (ctx, next) => {
 app.use(router.routes())
 
 app.listen(PORT, function() {
-  console.log('-------server started-------')
+  console.log('-------server started at port 3030-------')
 })
