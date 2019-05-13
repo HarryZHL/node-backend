@@ -76,7 +76,7 @@ router.post('/saveEvents', async ctx => {
       })
     }
     await writefile()
-    const ids = event.map(item => item.id)
+    const ids = event.map(item => item.count)
     const data = ids.join(',')
     body.data = data
     ctx.status = 200
