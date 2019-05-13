@@ -67,7 +67,7 @@ router.post('/saveEvents', async ctx => {
           const dataStr = data.toString()
           const fileJson = dataStr ? JSON.parse(dataStr) : {}
           fileJson.data = fileJson.data || []
-          fileJson.data.push(event)
+          fileJson.data.push(...event)
           fileJson.total = fileJson.data.length
           const fileStr = JSON.stringify(fileJson)
           fs.writeFileSync(path.join(recordFolder, file), fileStr)
@@ -76,6 +76,9 @@ router.post('/saveEvents', async ctx => {
       })
     }
     await writefile()
+    const ids = event.map(item => item.id)
+    const data = ids.join(',')
+    body.data = data
     ctx.status = 200
     ctx.body = body
   } catch (error) {
