@@ -8,6 +8,7 @@ const router = require('./src/router')
 const PORT = 3030
 
 app.use(static(path.join(__dirname, './record')))
+app.use(static(path.join(__dirname, './src/html')))
 
 app.use(async (ctx, next) => {
   const start = Date.now();
