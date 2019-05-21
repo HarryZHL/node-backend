@@ -91,4 +91,43 @@ router.post('/saveEvents', async ctx => {
     }
   }
 })
+router.all('/events', async ctx => {
+  ctx.websocket.on('message', async message => {
+    console.log('====' + message + '======')
+    const msg = JSON.parse(message)
+    const recordFolder = path.join(__dirname, '../../record')
+    async function writefile () {
+      return new Promise((resolve, reject) => {
+        fs.readdir(recordFolder, (err, files) => {
+          if (files.indexOf('wstest.json') === -1) {
+            console.log(`创建新文件: wstest.json`)
+            fs.writeFileSync(path.join(recordFolder, 'wstest.json'), '')
+          }
+          const data = fs.readFileSync(path.join(recordFolder, 'wstest.json'))
+          const dataStr = data.toString()
+          const fileJson = dataStr ? JSON.parse(dataStr) : {}
+          fileJson.data = fileJson.data || []
+          const event = msg.filter(item => item.type !== 5)
+          fileJson.data.push(...event)
+          fileJson.total = fileJson.data.length
+          const fileStr = JSON.stringify(fileJson)
+          fs.writeFileSync(path.join(recordFolder, 'wstest.json'), fileStr)
+          resolve()
+        })
+      })
+    }
+    await writefile()
+    let isGetBiz
+    const idList = msg.map(item => {
+      if(item.type === 5) {
+        isGetBiz = true
+        return JSON.stringify({iSeeBiz: 'testFromNode'})
+      } else {
+        isGetBiz = false
+        return item.count
+      }
+    })
+    isGetBiz ? ctx.websocket.send(idList.join(',')) : ctx.websocket.send(JSON.stringify(idList))
+  })
+})
 module.exports = router

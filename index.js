@@ -3,7 +3,8 @@ const bodyParser = require('koa-bodyparser')
 const moment = require('moment')
 const path = require('path')
 const static = require('koa-static')
-const app = new Koa()
+const socket = require('koa-websocket')
+const app = socket(new Koa())
 const router = require('./src/router')
 const PORT = 3030
 
@@ -45,6 +46,7 @@ app.use(async (ctx, next) => {
 });
 
 // app.use('/', router)
+app.ws.use(router.routes())
 app.use(router.routes())
 
 app.listen(PORT, function() {
