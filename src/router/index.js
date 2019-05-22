@@ -127,7 +127,7 @@ router.all('/events', async ctx => {
         return item.count
       }
     })
-    isGetBiz ? ctx.websocket.send(idList.join(',')) : ctx.websocket.send(JSON.stringify(idList))
+    ctx.websocket.send(idList.join(','))
   })
 })
 module.exports = router
